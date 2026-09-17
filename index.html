@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scrambler</title>
 
-  <!-- Pretendard & Pretendard JP 웹폰트 신뢰성 강화 로딩 -->
+  <!-- 웹폰트 로딩 -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/jp/static/pretendard-jp.min.css">
@@ -27,7 +27,6 @@
       --btn-secondary-hover: #D1D1D6;
     }
 
-    /* 맑은 고딕 강제 우선순위 해제를 위한 !important 적용 */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -77,7 +76,14 @@
       letter-spacing: -0.01em;
     }
 
-    textarea, input[type="text"] {
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
       font-family: inherit !important;
     }
 
@@ -94,7 +100,7 @@
       transition: all 0.2s ease;
     }
 
-    textarea:focus, input[type="text"]:focus {
+    textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
       outline: none;
       background-color: #FFFFFF;
       border-color: var(--text-primary);
@@ -102,7 +108,7 @@
 
     .options {
       margin: 16px 0 20px 0;
-      padding: 16px;
+      padding: 18px;
       background-color: var(--input-bg);
       border-radius: 14px;
       display: flex;
@@ -116,6 +122,7 @@
       gap: 10px;
       font-size: 0.9rem;
       color: var(--text-primary);
+      flex-wrap: wrap;
     }
 
     .option-item input[type="checkbox"] {
@@ -132,6 +139,42 @@
       border-radius: 8px;
       font-size: 0.85rem;
       flex: 1;
+      min-width: 150px;
+    }
+
+    .option-divider {
+      height: 1px;
+      background-color: var(--border);
+      margin: 4px 0;
+    }
+
+    .option-label {
+      font-weight: 600;
+      min-width: 90px;
+    }
+
+    .radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .radio-label input[type="radio"] {
+      accent-color: var(--text-primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .count-input {
+      width: 70px;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-left: 6px;
     }
 
     .btn-group {
@@ -173,11 +216,18 @@
       background-color: var(--btn-secondary-hover);
     }
 
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
     input[type="file"] {
       display: none;
     }
 
-    /* Quiz Item Design */
+    /* Quiz Item */
     .quiz-item {
       padding: 20px 0;
       border-bottom: 1px solid var(--border);
@@ -192,23 +242,74 @@
       padding-top: 0;
     }
 
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
     .quiz-num {
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-secondary);
-      margin-bottom: 8px;
     }
 
-    .scrambled-box {
+    /* Word Buttons */
+    .scrambled-box-interactive {
       background-color: var(--input-bg);
-      padding: 14px 18px;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text-primary);
+      padding: 12px 14px;
+      border-radius: 14px;
       margin-bottom: 12px;
-      line-height: 1.6;
-      word-break: break-word;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+    }
+
+    .word-btn {
+      background-color: #FFFFFF;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .word-btn:hover {
+      background-color: #F8F8FA;
+      border-color: #D1D1D6;
+    }
+
+    .word-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* 클릭 시 빗금(취소선) 스타일 */
+    .word-btn.used {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-decoration-color: var(--text-secondary);
+      color: var(--text-secondary);
+      background-color: #E5E5EA;
+      border-color: transparent;
+      box-shadow: none;
+      opacity: 0.6;
+    }
+
+    .token-divider {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      user-select: none;
     }
 
     .user-input {
@@ -287,7 +388,6 @@
       margin-top: 8px;
     }
 
-    /* Footer Design */
     footer {
       text-align: center;
       font-size: 0.8rem;
@@ -305,12 +405,12 @@
       <h1>Scrambler</h1>
     </header>
 
-    <!-- 1. 지문 입력 섹션 -->
+    <!-- 1. 지문 입력 카드 -->
     <div id="inputContainer" class="card">
       <div class="card-title">지문 입력</div>
       <textarea id="inputText" placeholder="영어 지문을 입력하세요. 줄바꿈(Enter)으로 각각의 문장을 구분합니다."></textarea>
 
-      <!-- 옵션 -->
+      <!-- 옵션 영역 -->
       <div class="options">
         <div class="option-item">
           <input type="checkbox" id="groupArticles" checked>
@@ -321,20 +421,41 @@
           <label for="groupCustom" style="white-space: nowrap;">지정 단어 묶기:</label>
           <input type="text" id="customWords" value="in, on, at, of, to, with" placeholder="예: in, on, of">
         </div>
+
+        <div class="option-divider"></div>
+
+        <!-- 문제 순서 옵션 -->
+        <div class="option-item">
+          <span class="option-label">문제 순서:</span>
+          <label class="radio-label"><input type="radio" name="orderMode" value="original" checked> 순서대로</label>
+          <label class="radio-label" style="margin-left: 10px;"><input type="radio" name="orderMode" value="random"> 랜덤 섞기</label>
+        </div>
+
+        <!-- 문제 수 옵션 -->
+        <div class="option-item">
+          <span class="option-label">출제 문제 수:</span>
+          <label class="radio-label"><input type="radio" name="countMode" value="all" checked onchange="toggleCountInput()"> 전체 문제</label>
+          <label class="radio-label" style="margin-left: 10px;"><input type="radio" name="countMode" value="custom" onchange="toggleCountInput()"> 지정 개수</label>
+          <input type="number" id="customCount" value="5" min="1" class="count-input" style="display: none;" placeholder="개수">
+        </div>
       </div>
 
       <!-- 버튼 영역 -->
       <div class="btn-group">
-        <button onclick="generateQuiz()" style="flex: 2;">문제 만들기</button>
+        <button onclick="generateScramble()" style="flex: 2;">문제 만들기</button>
         <label for="fileInput" class="file-label btn-secondary" style="flex: 1;">불러오기</label>
         <input type="file" id="fileInput" accept=".txt" onchange="loadTextFile(event)">
         <button class="btn-secondary" onclick="downloadTextFile()" style="flex: 1;">저장하기</button>
       </div>
     </div>
 
-    <!-- 2. 문제 풀기 섹션 -->
+    <!-- 2. 문제 풀기 카드 -->
     <div id="quizContainer" class="card" style="display: none;">
-      <div class="card-title">문제 풀기</div>
+      <div class="card-title-row">
+        <div class="card-title" style="margin-bottom: 0;">문제 풀기</div>
+        <button class="btn-secondary btn-sm" onclick="copyAllScrambled(this)">📋 전체 스크램블 복사</button>
+      </div>
+
       <div id="quizList"></div>
       
       <div class="btn-group" style="margin-top: 28px;">
@@ -343,7 +464,6 @@
       </div>
     </div>
 
-    <!-- 푸터 영역 -->
     <footer>
       &copy; 2026 Hachae. All rights reserved.
     </footer>
@@ -352,7 +472,12 @@
   <script>
     let sentencesData = [];
 
-    // TXT 불러오기
+    function toggleCountInput() {
+      const countMode = document.querySelector('input[name="countMode"]:checked').value;
+      const countInput = document.getElementById('customCount');
+      countInput.style.display = (countMode === 'custom') ? 'inline-block' : 'none';
+    }
+
     function loadTextFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -364,7 +489,6 @@
       reader.readAsText(file);
     }
 
-    // TXT 저장하기
     function downloadTextFile() {
       const text = document.getElementById('inputText').value;
       if (!text.trim()) {
@@ -379,20 +503,16 @@
       URL.revokeObjectURL(link.href);
     }
 
-    // 배열 무작위 셔플
+    // 무작위 셔플 (Fisher-Yates 알고리즘)
     function shuffle(array) {
-      let currentIndex = array.length, randomIndex;
       const newArray = [...array];
-
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [newArray[currentIndex], newArray[randomIndex]] = [newArray[randomIndex], newArray[currentIndex]];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
       }
       return newArray;
     }
 
-    // 토큰화 및 단어 묶기
     function tokenizeSentence(sentence) {
       const words = sentence.trim().split(/\s+/);
       if (words.length === 0 || words[0] === "") return [];
@@ -429,8 +549,34 @@
       return tokens;
     }
 
-    // 문제 생성
-    function generateQuiz() {
+    function copyToClipboard(text, btnElement) {
+      const handleSuccess = () => {
+        const originalText = btnElement.textContent;
+        btnElement.textContent = "복사됨!";
+        setTimeout(() => {
+          btnElement.textContent = originalText;
+        }, 1500);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(handleSuccess).catch(() => alert("복사에 실패했습니다."));
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          handleSuccess();
+        } catch (err) {
+          alert("복사에 실패했습니다.");
+        }
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // 문제 생성 함수
+    function generateScramble() {
       const text = document.getElementById('inputText').value;
       const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
@@ -439,11 +585,32 @@
         return;
       }
 
+      const orderMode = document.querySelector('input[name="orderMode"]:checked').value;
+      const countMode = document.querySelector('input[name="countMode"]:checked').value;
+
+      let indexedLines = lines.map((line, idx) => ({ index: idx, text: line }));
+
+      // 1. 문제 수 처리
+      if (countMode === 'custom') {
+        const customCountInput = document.getElementById('customCount');
+        let count = parseInt(customCountInput.value, 10) || 1;
+        count = Math.max(1, Math.min(count, lines.length));
+        indexedLines = shuffle(indexedLines).slice(0, count);
+      }
+
+      // 2. 문제 순서 처리 (순서대로 / 랜덤)
+      if (orderMode === 'original') {
+        indexedLines.sort((a, b) => a.index - b.index);
+      } else {
+        indexedLines = shuffle(indexedLines);
+      }
+
       sentencesData = [];
       const quizList = document.getElementById('quizList');
       quizList.innerHTML = '';
 
-      lines.forEach((originalSentence, index) => {
+      indexedLines.forEach((item, index) => {
+        const originalSentence = item.text;
         const tokens = tokenizeSentence(originalSentence);
         
         let scrambledTokens = shuffle(tokens);
@@ -451,35 +618,149 @@
           scrambledTokens = shuffle(tokens);
         }
 
-        sentencesData.push({
-          original: originalSentence,
-          tokens: tokens
-        });
+        const scrambledText = scrambledTokens.join(' / ');
 
+        const sentenceItem = {
+          original: originalSentence,
+          scrambledText: scrambledText,
+          scrambledTokens: scrambledTokens,
+          selectedIndices: []
+        };
+        sentencesData.push(sentenceItem);
+
+        // Quiz DOM 구조 생성
         const quizItem = document.createElement('div');
         quizItem.className = 'quiz-item';
-        quizItem.innerHTML = `
-          <div class="quiz-num">QUESTION ${index + 1}</div>
-          <div class="scrambled-box">${scrambledTokens.join(' / ')}</div>
-          <input type="text" class="user-input" id="input-${index}" placeholder="원래 문장을 입력하세요..." autocomplete="off">
-          <div class="feedback" id="feedback-${index}"></div>
-        `;
+
+        const quizHeader = document.createElement('div');
+        quizHeader.className = 'quiz-header';
+        
+        const quizNum = document.createElement('span');
+        quizNum.className = 'quiz-num';
+        quizNum.textContent = `QUESTION ${index + 1}`;
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.type = 'button';
+        copyBtn.className = 'btn-secondary btn-sm';
+        copyBtn.textContent = '복사';
+        copyBtn.onclick = function() { copySingleText(index, this); };
+
+        quizHeader.appendChild(quizNum);
+        quizHeader.appendChild(copyBtn);
+
+        // 클릭 가능한 단어 버튼 컨테이너 생성
+        const wordBox = document.createElement('div');
+        wordBox.className = 'scrambled-box-interactive';
+        wordBox.id = `word-box-${index}`;
+
+        scrambledTokens.forEach((token, tIdx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'word-btn';
+          btn.id = `btn-${index}-${tIdx}`;
+          btn.textContent = token; // 따옴표 문법 오류 없이 동적 텍스트 삽입
+
+          // 클릭 이벤트 직접 바인딩
+          btn.addEventListener('click', function() {
+            toggleWordToken(index, tIdx);
+          });
+
+          wordBox.appendChild(btn);
+
+          if (tIdx < scrambledTokens.length - 1) {
+            const divider = document.createElement('span');
+            divider.className = 'token-divider';
+            divider.textContent = ' / ';
+            wordBox.appendChild(divider);
+          }
+        });
+
+        const inputEl = document.createElement('input');
+        inputEl.type = 'text';
+        inputEl.className = 'user-input';
+        inputEl.id = `input-${index}`;
+        inputEl.placeholder = '단어 버튼을 클릭하거나 직접 입력하세요...';
+        inputEl.autocomplete = 'off';
+        inputEl.addEventListener('input', function() { handleManualInput(index); });
+
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.className = 'feedback';
+        feedbackDiv.id = `feedback-${index}`;
+
+        quizItem.appendChild(quizHeader);
+        quizItem.appendChild(wordBox);
+        quizItem.appendChild(inputEl);
+        quizItem.appendChild(feedbackDiv);
+
         quizList.appendChild(quizItem);
       });
 
-      document.getElementById('inputContainer').style.display = 'none';
-      document.getElementById('quizContainer').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const quizContainer = document.getElementById('quizContainer');
+      quizContainer.style.display = 'block';
+      quizContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 지문 수정으로 돌아가기
+    // 단어 클릭 시 토글 (빗금 및 자동입력)
+    function toggleWordToken(qIndex, tokenIndex) {
+      const data = sentencesData[qIndex];
+      if (!data) return;
+
+      const selectedPos = data.selectedIndices.indexOf(tokenIndex);
+
+      if (selectedPos > -1) {
+        data.selectedIndices.splice(selectedPos, 1);
+      } else {
+        data.selectedIndices.push(tokenIndex);
+      }
+
+      updateWordBoxUI(qIndex);
+    }
+
+    // UI 업데이트 (빗금 적용 및 정답입력창 동기화)
+    function updateWordBoxUI(qIndex) {
+      const data = sentencesData[qIndex];
+      if (!data) return;
+
+      const inputEl = document.getElementById(`input-${qIndex}`);
+
+      data.scrambledTokens.forEach((_, tIdx) => {
+        const btn = document.getElementById(`btn-${qIndex}-${tIdx}`);
+        if (!btn) return;
+
+        if (data.selectedIndices.includes(tIdx)) {
+          btn.classList.add('used');
+        } else {
+          btn.classList.remove('used');
+        }
+      });
+
+      const selectedWords = data.selectedIndices.map(i => data.scrambledTokens[i]);
+      inputEl.value = selectedWords.join(' ');
+    }
+
+    function handleManualInput(qIndex) {
+      const inputEl = document.getElementById(`input-${qIndex}`);
+      if (inputEl && inputEl.value.trim() === '') {
+        sentencesData[qIndex].selectedIndices = [];
+        updateWordBoxUI(qIndex);
+      }
+    }
+
+    function copySingleText(index, btnEl) {
+      copyToClipboard(sentencesData[index].scrambledText, btnEl);
+    }
+
+    function copyAllScrambled(btnEl) {
+      if (sentencesData.length === 0) return;
+      const allText = sentencesData.map((item, idx) => `Q${idx + 1}. ${item.scrambledText}`).join('\n');
+      copyToClipboard(allText, btnEl);
+    }
+
     function backToInput() {
-      document.getElementById('quizContainer').style.display = 'none';
-      document.getElementById('inputContainer').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('inputContainer').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 정답 채점 및 오답 분석
+    // 채점 기능
     function checkAnswers() {
       sentencesData.forEach((data, index) => {
         const userInput = document.getElementById(`input-${index}`).value.trim();
@@ -507,7 +788,7 @@
               if (uWord === tWord) {
                 html += `<span class="word-chip match">${uWord}</span>`;
               } else {
-                html += `<span class="word-chip mismatch" title="해당 위치의 단어가 잘못되었습니다">${uWord}</span>`;
+                html += `<span class="word-chip mismatch" title="해당 위치의 단어가 틀렸습니다">${uWord}</span>`;
               }
             });
           }
