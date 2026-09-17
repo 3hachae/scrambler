@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrambler</title>
+
+  <!-- Pretendard & Pretendard JP 웹폰트 신뢰성 강화 로딩 -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/jp/static/pretendard-jp.min.css">
+
+  <style>
+    @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/jp/static/pretendard-jp.min.css");
+    @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+    :root {
+      --bg: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --text-primary: #1C1C1E;
+      --text-secondary: #8E8E93;
+      --border: #E5E5EA;
+      --input-bg: #F2F2F7;
+      --btn-primary: #1C1C1E;
+      --btn-primary-hover: #3A3A3C;
+      --btn-secondary: #E5E5EA;
+      --btn-secondary-hover: #D1D1D6;
+    }
+
+    /* 맑은 고딕 강제 우선순위 해제를 위한 !important 적용 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard JP", "Pretendard", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      padding: 40px 20px 20px 20px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 28px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    textarea, input[type="text"] {
+      font-family: inherit !important;
+    }
+
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 16px;
+      background-color: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      resize: vertical;
+      transition: all 0.2s ease;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      background-color: #FFFFFF;
+      border-color: var(--text-primary);
+    }
+
+    .options {
+      margin: 16px 0 20px 0;
+      padding: 16px;
+      background-color: var(--input-bg);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .option-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .option-item input[type="text"] {
+      padding: 6px 12px;
+      background-color: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      flex: 1;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, .file-label {
+      background-color: var(--btn-primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    button:hover, .file-label:hover {
+      background-color: var(--btn-primary-hover);
+    }
+
+    button:active, .file-label:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background-color: var(--btn-secondary);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--btn-secondary-hover);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Quiz Item Design */
+    .quiz-item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .quiz-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .quiz-item:first-child {
+      padding-top: 0;
+    }
+
+    .quiz-num {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .scrambled-box {
+      background-color: var(--input-bg);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .user-input {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+    }
+
+    /* Feedback & Word Analysis */
+    .feedback {
+      margin-top: 12px;
+    }
+
+    .feedback-status {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feedback-status.correct {
+      color: #1C1C1E;
+    }
+
+    .feedback-status.wrong {
+      color: #8E8E93;
+    }
+
+    .analysis-box {
+      background-color: var(--input-bg);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+
+    .analysis-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .word-tokens {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .word-chip {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .word-chip.match {
+      background-color: #E5E5EA;
+      color: var(--text-primary);
+    }
+
+    .word-chip.mismatch {
+      background-color: #1C1C1E;
+      color: #FFFFFF;
+      text-decoration: line-through;
+    }
+
+    .analysis-info {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* Footer Design */
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 40px;
+      padding-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Scrambler</h1>
+    </header>
+
+    <!-- 1. 지문 입력 섹션 -->
+    <div id="inputContainer" class="card">
+      <div class="card-title">지문 입력</div>
+      <textarea id="inputText" placeholder="영어 지문을 입력하세요. 줄바꿈(Enter)으로 각각의 문장을 구분합니다."></textarea>
+
+      <!-- 옵션 -->
+      <div class="options">
+        <div class="option-item">
+          <input type="checkbox" id="groupArticles" checked>
+          <label for="groupArticles">관사 묶기 (a, an, the + 다음 단어)</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="groupCustom">
+          <label for="groupCustom" style="white-space: nowrap;">지정 단어 묶기:</label>
+          <input type="text" id="customWords" value="in, on, at, of, to, with" placeholder="예: in, on, of">
+        </div>
+      </div>
+
+      <!-- 버튼 영역 -->
+      <div class="btn-group">
+        <button onclick="generateQuiz()" style="flex: 2;">문제 만들기</button>
+        <label for="fileInput" class="file-label btn-secondary" style="flex: 1;">불러오기</label>
+        <input type="file" id="fileInput" accept=".txt" onchange="loadTextFile(event)">
+        <button class="btn-secondary" onclick="downloadTextFile()" style="flex: 1;">저장하기</button>
+      </div>
+    </div>
+
+    <!-- 2. 문제 풀기 섹션 -->
+    <div id="quizContainer" class="card" style="display: none;">
+      <div class="card-title">문제 풀기</div>
+      <div id="quizList"></div>
+      
+      <div class="btn-group" style="margin-top: 28px;">
+        <button onclick="checkAnswers()" style="flex: 2;">정답 확인하기</button>
+        <button class="btn-secondary" onclick="backToInput()" style="flex: 1;">지문 수정하기</button>
+      </div>
+    </div>
+
+    <!-- 푸터 영역 -->
+    <footer>
+      &copy; 2026 Hachae. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    let sentencesData = [];
+
+    // TXT 불러오기
+    function loadTextFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('inputText').value = e.target.result;
+      };
+      reader.readAsText(file);
+    }
+
+    // TXT 저장하기
+    function downloadTextFile() {
+      const text = document.getElementById('inputText').value;
+      if (!text.trim()) {
+        alert("저장할 지문이 없습니다.");
+        return;
+      }
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "scrambler_text.txt";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    // 배열 무작위 셔플
+    function shuffle(array) {
+      let currentIndex = array.length, randomIndex;
+      const newArray = [...array];
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [newArray[currentIndex], newArray[randomIndex]] = [newArray[randomIndex], newArray[currentIndex]];
+      }
+      return newArray;
+    }
+
+    // 토큰화 및 단어 묶기
+    function tokenizeSentence(sentence) {
+      const words = sentence.trim().split(/\s+/);
+      if (words.length === 0 || words[0] === "") return [];
+
+      const groupArticles = document.getElementById('groupArticles').checked;
+      const groupCustom = document.getElementById('groupCustom').checked;
+      
+      let customList = [];
+      if (groupCustom) {
+        customList = document.getElementById('customWords').value
+          .split(',')
+          .map(w => w.trim().toLowerCase())
+          .filter(w => w.length > 0);
+      }
+
+      const articles = ['a', 'an', 'the'];
+      const tokens = [];
+
+      for (let i = 0; i < words.length; i++) {
+        let currentWord = words[i];
+        let cleanWord = currentWord.replace(/[^\w]/g, '').toLowerCase();
+
+        let isArticle = groupArticles && articles.includes(cleanWord);
+        let isCustom = groupCustom && customList.includes(cleanWord);
+
+        if ((isArticle || isCustom) && i < words.length - 1) {
+          tokens.push(`${currentWord} ${words[i+1]}`);
+          i++; 
+        } else {
+          tokens.push(currentWord);
+        }
+      }
+
+      return tokens;
+    }
+
+    // 문제 생성
+    function generateQuiz() {
+      const text = document.getElementById('inputText').value;
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+      if (lines.length === 0) {
+        alert("영어 지문을 입력해 주세요.");
+        return;
+      }
+
+      sentencesData = [];
+      const quizList = document.getElementById('quizList');
+      quizList.innerHTML = '';
+
+      lines.forEach((originalSentence, index) => {
+        const tokens = tokenizeSentence(originalSentence);
+        
+        let scrambledTokens = shuffle(tokens);
+        if (tokens.length > 1 && scrambledTokens.join(' ') === tokens.join(' ')) {
+          scrambledTokens = shuffle(tokens);
+        }
+
+        sentencesData.push({
+          original: originalSentence,
+          tokens: tokens
+        });
+
+        const quizItem = document.createElement('div');
+        quizItem.className = 'quiz-item';
+        quizItem.innerHTML = `
+          <div class="quiz-num">QUESTION ${index + 1}</div>
+          <div class="scrambled-box">${scrambledTokens.join(' / ')}</div>
+          <input type="text" class="user-input" id="input-${index}" placeholder="원래 문장을 입력하세요..." autocomplete="off">
+          <div class="feedback" id="feedback-${index}"></div>
+        `;
+        quizList.appendChild(quizItem);
+      });
+
+      document.getElementById('inputContainer').style.display = 'none';
+      document.getElementById('quizContainer').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 지문 수정으로 돌아가기
+    function backToInput() {
+      document.getElementById('quizContainer').style.display = 'none';
+      document.getElementById('inputContainer').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 정답 채점 및 오답 분석
+    function checkAnswers() {
+      sentencesData.forEach((data, index) => {
+        const userInput = document.getElementById(`input-${index}`).value.trim();
+        const feedbackEl = document.getElementById(`feedback-${index}`);
+
+        const userWords = userInput.split(/\s+/).filter(w => w.length > 0);
+        const targetWords = data.original.split(/\s+/).filter(w => w.length > 0);
+
+        const normalizedUser = userInput.replace(/\s+/g, ' ');
+        const normalizedOriginal = data.original.replace(/\s+/g, ' ');
+
+        if (normalizedUser === normalizedOriginal) {
+          feedbackEl.innerHTML = '<div class="feedback-status correct">✓ 정답입니다</div>';
+        } else {
+          let html = '<div class="feedback-status wrong">✕ 다시 확인해보세요</div>';
+          html += '<div class="analysis-box">';
+          html += '<div class="analysis-title">입력 단어 순서 분석</div>';
+          html += '<div class="word-tokens">';
+
+          if (userWords.length === 0) {
+            html += '<span class="word-chip mismatch">입력된 단어 없음</span>';
+          } else {
+            userWords.forEach((uWord, i) => {
+              const tWord = targetWords[i];
+              if (uWord === tWord) {
+                html += `<span class="word-chip match">${uWord}</span>`;
+              } else {
+                html += `<span class="word-chip mismatch" title="해당 위치의 단어가 잘못되었습니다">${uWord}</span>`;
+              }
+            });
+          }
+
+          html += '</div>';
+
+          if (userWords.length !== targetWords.length) {
+            html += `<div class="analysis-info">단어 수: ${userWords.length}개 입력됨 (목표: ${targetWords.length}개)</div>`;
+          }
+
+          html += '</div>';
+          feedbackEl.innerHTML = html;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
